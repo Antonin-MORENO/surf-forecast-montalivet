@@ -5,11 +5,11 @@ import time
 from config import LAT, LON, MARINE_API_URL, WEATHER_API_URL, HISTORICAL_API_URL, MARINE_HISTORICAL_URL, FORECAST_DAYS, TRAINING_YEARS
 
 
-def _get_with_retry(url, params, retries=3, timeout=10):
-    """GET request with exponential backoff on 429 rate limit errors."""
+def _get_with_retry(url, params, retries=5, timeout=10):
+    """GET request with exponential backoff on 429 and 5xx errors."""
     for attempt in range(retries):
         response = requests.get(url, params=params, timeout=timeout)
-        if response.status_code == 429:
+        if response.status_code in (429, 500, 502, 503, 504):
             wait = 2 ** attempt
             time.sleep(wait)
             continue
