@@ -1,6 +1,7 @@
 import requests
 import pandas as pd
 from datetime import datetime, timedelta
+import time
 from config import LAT, LON, MARINE_API_URL, WEATHER_API_URL, HISTORICAL_API_URL, MARINE_HISTORICAL_URL, FORECAST_DAYS, TRAINING_YEARS
 
 
@@ -29,6 +30,9 @@ def fetch_forecast() -> pd.DataFrame:
         "forecast_days": FORECAST_DAYS,
         "timezone": "Europe/Paris"
     }
+    
+    time.sleep(1)
+    
     weather_resp = requests.get(WEATHER_API_URL, params=weather_params, timeout=10)
     weather_resp.raise_for_status()
     weather_data = weather_resp.json()["hourly"]
@@ -84,6 +88,8 @@ def fetch_historical() -> pd.DataFrame:
         "end_date": end_str,
         "timezone": "Europe/Paris"
     }
+    
+    
     weather_resp = requests.get(HISTORICAL_API_URL, params=weather_params, timeout=30)
     weather_resp.raise_for_status()
     weather_data = weather_resp.json()["hourly"]
@@ -131,6 +137,9 @@ def fetch_recent(days: int = 30) -> pd.DataFrame:
         "start_date": start_str, "end_date": end_str,
         "timezone": "Europe/Paris"
     }
+    
+    time.sleep(1)
+    
     weather_resp = requests.get(HISTORICAL_API_URL, params=weather_params, timeout=30)
     weather_resp.raise_for_status()
     weather_data = weather_resp.json()["hourly"]
